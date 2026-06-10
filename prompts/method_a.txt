@@ -1,0 +1,8 @@
+Answer the following survey question as a random US woman aged 18 to 35.
+
+Question: {question}
+
+Options:
+{options}
+
+Respond with ONLY the single capital letter of the option you choose (for example: C). Do not explain or add any other text.

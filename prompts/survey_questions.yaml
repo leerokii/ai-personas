@@ -1,0 +1,47 @@
+# The five single-select survey questions. Finalized option sets.
+# Each question informs the consequential decision: usage, trust, context,
+# friction, tone (in order).
+questions:
+  - id: q1            # usage
+    text: "How often do you currently use AI tools to help you find online communities or groups to join?"
+    options:
+      - {letter: A, text: "Never"}
+      - {letter: B, text: "Rarely — once or twice ever"}
+      - {letter: C, text: "Occasionally — a few times a year"}
+      - {letter: D, text: "Monthly"}
+      - {letter: E, text: "Weekly or more"}
+
+  - id: q2            # trust / comfort
+    text: "How comfortable would you be if an AI suggested an online community for you based on your interests?"
+    options:
+      - {letter: A, text: "Very uncomfortable"}
+      - {letter: B, text: "Somewhat uncomfortable"}
+      - {letter: C, text: "Neutral"}
+      - {letter: D, text: "Somewhat comfortable"}
+      - {letter: E, text: "Very comfortable"}
+
+  - id: q3            # context / community type
+    text: "Which kind of community would you most want an AI to help you find?"
+    options:
+      - {letter: A, text: "Hobby or interest-based"}
+      - {letter: B, text: "Professional or career"}
+      - {letter: C, text: "Support or health"}
+      - {letter: D, text: "Local or neighborhood"}
+      - {letter: E, text: "Identity-based"}
+
+  - id: q4            # friction
+    text: "What would most make you stop using an AI community-finder?"
+    options:
+      - {letter: A, text: "Inaccurate matches"}
+      - {letter: B, text: "Privacy concerns"}
+      - {letter: C, text: "Lack of human moderators"}
+      - {letter: D, text: "Feeling surveilled"}
+      - {letter: E, text: "Low-quality communities"}
+
+  - id: q5            # tone
+    text: "How should an AI describe a community to you when recommending it?"
+    options:
+      - {letter: A, text: "Neutral facts only"}
+      - {letter: B, text: "Warm and personal"}
+      - {letter: C, text: "Identity-aware"}
+      - {letter: D, text: "Like a friend's recommendation"}
