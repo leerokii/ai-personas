@@ -17,8 +17,8 @@ def method_a(n: int) -> list[dict]:
     """Method A — naive baseline.
 
     All n personas are identical: there is no per-persona conditioning. Each is
-    just an independent sample of the same prompt ("a random US woman aged 18 to
-    35"), drawn at temperature 1.0. The variation between the n responses comes
+    just an independent sample of the same prompt ("a random US adult woman"),
+    drawn at temperature 1.0. The variation between the n responses comes
     entirely from sampling, which is exactly what this baseline is meant to test.
     """
     return [{"persona_id": i, "method": "A", "system": None} for i in range(n)]

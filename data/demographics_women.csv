@@ -1,0 +1,50 @@
+# Demographic marginal distributions for US women (all ages, 18+) — for Method B.
+#
+# GROUP CHANGE: this file replaces demographics_women_18_35.csv. The study group
+# widened from "US women aged 18-35" to "US women (18+)". The 18-35-specific
+# approximations (single-year age reweighting, young-adult education blend) are
+# GONE — these are now standard whole-population marginals for adult women.
+#
+# PEW TABLE/PAGE FOR THESE NUMBERS: NONE. The Pew W173 AI reports do not publish
+# demographic composition. Every value is an approximate US Census ACS (2023)
+# marginal for US adult women, rounded to whole percentages, for conditioning
+# Method B profiles; refine against specific ACS tables if exact joint marginals
+# are required.
+#
+# NOTES on the widened group:
+#   - age_band now spans the full adult range (18-29 / 30-49 / 50-64 / 65+),
+#     matching Pew's published age bands. Adult women skew slightly older than
+#     men (longevity), so 65+ is a larger share than for the 18-35 group.
+#   - race_ethnicity: adult women overall are less diverse than the 18-35 cohort
+#     (older cohorts are whiter), so White non-Hispanic is higher here than in
+#     the prior 18-35 file.
+#   - education: highest attainment across all adult ages.
+#   - income: HOUSEHOLD income; coarse brackets, the least precise variable.
+#   - region: US Census 4-region scheme (unchanged — applies to all ages).
+#   - urbanicity: omitted (not in the requested variable list).
+#
+# Marginals are INDEPENDENT per variable (each `variable` block sums to ~100).
+# Method B is responsible for combining them into a joint distribution.
+#
+# Read in pandas with: pd.read_csv(path, comment='#')
+variable,category,pct
+age_band,18-29,20
+age_band,30-49,33
+age_band,50-64,24
+age_band,65+,23
+race_ethnicity,White non-Hispanic,58
+race_ethnicity,Hispanic,17
+race_ethnicity,Black non-Hispanic,13
+race_ethnicity,Asian non-Hispanic,6
+race_ethnicity,Other or multiracial non-Hispanic,6
+education,Bachelor's degree or higher,35
+education,Some college or associate,29
+education,High school or less,36
+income,Under $30k,22
+income,$30k-$59.9k,26
+income,$60k-$99.9k,25
+income,$100k or more,27
+region,Northeast,17
+region,Midwest,21
+region,South,38
+region,West,24

@@ -1,10 +1,17 @@
 # LLM Persona Construction Methods
 
-Testing four ways of building LLM personas of US women aged 18–35, surveyed on
-questions about using AI to find online communities. Each method produces a
+Testing four ways of building LLM personas of US women (all ages, 18+), surveyed
+on questions about using AI to find online communities. Each method produces a
 100-persona panel; the methods are compared on five evaluation dimensions to
 recommend which a senior decision-maker should trust for a consequential
 product decision.
+
+The group is US women 18+ (rather than a narrower age band) deliberately: it
+lets the study ground Methods B and D in **directly measured** Pew and Census
+data for adult women, instead of figures derived/estimated for a subgroup Pew
+does not publish on its own. The behavioral distributions in `data/` are Pew's
+published women breakdowns; the demographic marginals are Census ACS marginals
+for adult women.
 
 See `PROJECT_BRIEF.md` for the full specification.
 

@@ -1,4 +1,4 @@
-Answer the following survey question as a random US woman aged 18 to 35.
+Answer the following survey question as a random US adult woman.
 
 Question: {question}
 

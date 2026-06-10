@@ -1,5 +1,5 @@
 # Project Brief: LLM Persona Construction Methods
-### Testing four ways of building LLM personas of US women aged 18 to 35, on questions about AI for finding online communities.
+### Testing four ways of building LLM personas of US women (all ages, 18+), on questions about AI for finding online communities.
 
 ## What the Brief Asks For (Min's email, paraphrased)
 - Build 100 LLM personas modelling one group of humans
@@ -14,14 +14,17 @@ brief tests four different construction methods, each producing its own
 100-persona panel.
 
 ## The Consequential Decision
-Should a developer build an AI-powered tool to help US women aged 18 to 35
+Should a developer build an AI-powered tool to help US women (18+)
 find online communities, and if so, what design choices should they make?
 
 Five survey questions inform this decision: usage, trust, context, friction
 and tone.
 
 ## The Group
-US women aged 18 to 35.
+US women (all ages, 18+). This whole-population scope lets the study ground
+Methods B and D in directly measured Pew (behaviors) and Census ACS
+(demographics) data for adult women, rather than figures derived for a narrower
+age band Pew does not publish on its own.
 
 ## The Five Survey Questions (single-select)
 1. How often do you currently use AI tools to help you find online communities
@@ -43,13 +46,13 @@ Each question gets 4 to 5 single-select options. Finalize during build.
 Each method produces a 100-persona panel. Each rung adds one variable.
 
 ### Method A — Naive baseline
-One prompt: "Answer this question as a random US woman aged 18 to 35." Sample
+One prompt: "Answer this question as a random US adult woman." Sample
 100 times, temperature 1.0. Same survey for all 100. Hypothesis: collapses
 toward modal answers, undercounts minority opinions.
 
 ### Method B — Demographic conditioning
-Generate 100 demographic profiles matching the joint distribution of US women
-18 to 35 across age band, race/ethnicity, education, income, region and
+Generate 100 demographic profiles matching the joint distribution of US adult
+women (18+) across age band, race/ethnicity, education, income, region and
 urbanicity. Use US Census or Pew published marginals. Each profile becomes a
 system prompt. Hypothesis: better demographic representativeness, residual
 stereotyping.
@@ -63,8 +66,8 @@ of caricature.
 ### Method D — Behaviorally grounded personas
 Layer behavioral traits onto each Method B profile: AI usage frequency,
 primary digital platforms, online community participation level, comfort
-with AI tools. Source these from Pew's published distributions for women in
-this age band. Narratives anchor to empirical behavioral facts.
+with AI tools. Source these from Pew's published distributions for adult
+women. Narratives anchor to empirical behavioral facts.
 
 Mirrors Artificial Societies' stated approach ("constructed from real-world
 social behavior data") and tests whether the behavioral layer improves output.

@@ -1,0 +1,63 @@
+# Behavioral distributions for US women (all ages, 18+) — for Method D grounding.
+#
+# GROUP CHANGE: this file replaces behaviors_women_18_35.yaml. The study group
+# widened from "US women aged 18-35" to "US women (18+)". Because Pew W173
+# publishes a directly measured WOMEN breakdown, the previous derivation
+# (age-band blend + gender-gap shift, renormalized) is GONE. Each `women` block
+# below is Pew's directly measured figure for women — no estimation.
+#
+# SOURCE: Pew Research Center, American Trends Panel Wave 173 ("How Americans
+# View AI and Its Impact on People and Society"), fielded June 9-15, 2025,
+# N=5,023 US adults. Files in data/:
+#   - PS_2025.9.15_AI-and-its-impact_report.pdf   (charts + Appendix crosstabs)
+#   - PS_2025.9.17_AI-and-its-impact_topline.pdf  (full response percentages)
+#
+# The gender breakdown comes from the REPORT charts (the topline reports US
+# adults overall, not by gender). `source` cites the report page per measure.
+# `us_adults_reference` keeps the topline overall figure for context.
+#
+# Published percentages omit "no answer" (~1%), so a `women` row may total ~99.
+# Normalize to probabilities at sampling time in Method D.
+
+ai_awareness:
+  question: "How much have you heard or read about AI?"
+  categories: [heard_a_lot, heard_a_little, nothing_at_all]
+  source: "report p.12 chart 'Younger adults are more likely than older adults to say they have heard a lot about AI', Women row"
+  women: {heard_a_lot: 41, heard_a_little: 52, nothing_at_all: 6}
+  us_adults_reference: {heard_a_lot: 47, heard_a_little: 48, nothing_at_all: 5}  # topline p.2, AI_HEARD
+
+ai_usage_frequency:
+  question: "Just your impression, how often do you interact with AI?"
+  # Pew publishes women's usage with the topline's top two levels combined, so
+  # the women breakdown is 4-category. The full 5-category split exists only for
+  # US adults overall (topline) and is kept as reference below.
+  categories: [almost_constantly_or_several_a_day, about_once_a_day, several_times_a_week, less_often]
+  source: "report p.14 chart 'A majority of Americans say they interact with AI at least several times a week', Women row"
+  women: {almost_constantly_or_several_a_day: 28, about_once_a_day: 14, several_times_a_week: 16, less_often: 42}
+  us_adults_reference:   # topline p.2, USEAI, full 5-category
+    almost_constantly: 5
+    several_times_a_day: 26
+    about_once_a_day: 15
+    several_times_a_week: 17
+    less_often: 38
+
+ai_sentiment:
+  question: "Does the increased use of AI in daily life make you feel...?"
+  categories: [more_concerned, more_excited, equally]
+  source: "report p.42 Appendix chart 'Concern over the increased use of AI in daily life is widespread...', Women row"
+  women: {more_concerned: 55, more_excited: 8, equally: 36}
+  us_adults_reference: {more_concerned: 50, more_excited: 10, equally: 38}  # topline p.2, CNCEXC
+
+willingness_ai_assist:
+  question: "How much would you be willing to let AI assist with your day-to-day tasks?"
+  categories: [a_lot, a_little, not_at_all]
+  source: "report p.39 Appendix chart 'Majority of Americans are willing to let AI assist with day-to-day activities at least a little', Women row"
+  women: {a_lot: 10, a_little: 58, not_at_all: 31}
+  us_adults_reference: {a_lot: 13, a_little: 60, not_at_all: 27}  # topline p.5, AIASSIST
+
+control_attitudes:
+  question: "Which better describes how you feel about the amount of control you have over how AI is used in your life?"
+  categories: [want_more_control, comfortable, not_sure]
+  source: "report p.41 Appendix chart '6 in 10 Americans say they would like more control over the use of AI in their lives', Women row"
+  women: {want_more_control: 60, comfortable: 15, not_sure: 24}
+  us_adults_reference: {want_more_control: 61, comfortable: 17, not_sure: 21}  # topline p.4, AICONTROL2
