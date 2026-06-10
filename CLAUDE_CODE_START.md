@@ -4,7 +4,7 @@ I'm building a take-home task for Artificial Societies (Forward Deployed Enginee
 The full spec is in PROJECT_BRIEF.md. Read it fully before doing anything.
 
 ## The Goal (in one sentence)
-Build four different methods of constructing 100 LLM personas of US women 18 to 35,
+Build four different methods of constructing 100 LLM personas of US women (all ages, 18+),
 ask each panel of 100 the same five survey questions, then compare the methods on
 five dimensions to recommend which one a senior decision-maker should trust.
 
