@@ -1,0 +1,14 @@
+# Configuration for the LLM persona construction study.
+# All values here are read by the pipeline; change them in one place.
+
+model: claude-sonnet-4-6        # default model (do not switch without sign-off)
+temperature: 1.0                # sampling temperature for survey calls (Method A baseline)
+num_personas: 100               # personas per method panel
+num_repeats: 3                  # repeat runs per method for internal-consistency checks
+budget_cap_usd: 20.0            # hard ceiling on total API spend
+
+# Token pricing for claude-sonnet-4-6 (USD per 1,000,000 tokens).
+# Used by src/client.py to track running cost. Update if the model changes.
+pricing:
+  input_per_mtok: 3.00
+  output_per_mtok: 15.00

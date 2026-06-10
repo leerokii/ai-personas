@@ -1,0 +1,7 @@
+anthropic
+pyyaml
+pandas
+matplotlib
+numpy
+python-dotenv
+jupyter
