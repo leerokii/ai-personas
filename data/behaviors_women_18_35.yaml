@@ -35,6 +35,9 @@
 ai_awareness:
   question: "How much have you heard or read about AI?"
   categories: [heard_a_lot, heard_a_little, nothing_at_all]
+  pew_source:
+    us_adults: "topline p.2, item AI_HEARD, row 'Jun 9-15, 2025' (47/48/5)"
+    women_and_age_bands: "report p.12 chart 'Younger adults are more likely than older adults to say they have heard a lot about AI' (women 41/52/6; 18-29 62/35/3; 30-49 51/45/3)"
   women_18_35:
     heard_a_lot: 53
     heard_a_little: 43
@@ -48,6 +51,9 @@ ai_awareness:
 ai_usage_frequency:
   question: "Just your impression, how often do you interact with AI?"
   categories: [almost_constantly, several_times_a_day, about_once_a_day, several_times_a_week, less_often]
+  pew_source:
+    us_adults: "topline p.2, item USEAI, row 'Jun 9-15, 2025' (5/26/15/17/38, full 5-category)"
+    women_and_age_bands: "report p.14 chart 'A majority of Americans say they interact with AI at least several times a week' (collapsed: women 28/14/16/42; 18-29 33/20/21/26; 30-49 37/16/14/33)"
   women_18_35:
     almost_constantly: 5
     several_times_a_day: 27
@@ -70,6 +76,9 @@ ai_usage_frequency:
 ai_sentiment:
   question: "Does the increased use of AI in daily life make you feel...?"
   categories: [more_concerned, more_excited, equally]
+  pew_source:
+    us_adults: "topline p.2, item CNCEXC, row 'Jun 9-15, 2025' (more excited 10 / more concerned 50 / equally 38)"
+    women_and_age_bands: "report p.42 Appendix chart 'Concern over the increased use of AI in daily life is widespread...' (women 55/8/36; 18-29 47/14/39; 30-49 48/15/37)"
   women_18_35:
     more_concerned: 52
     more_excited: 12
@@ -83,6 +92,9 @@ ai_sentiment:
 willingness_ai_assist:
   question: "How much would you be willing to let AI assist with your day-to-day tasks?"
   categories: [a_lot, a_little, not_at_all]
+  pew_source:
+    us_adults: "topline p.5, item AIASSIST, row 'Jun 9-15, 2025' (13/60/27)"
+    women_and_age_bands: "report p.39 Appendix chart 'Majority of Americans are willing to let AI assist with day-to-day activities at least a little' (women 10/58/31; 18-29 17/60/23; 30-49 16/60/24)"
   women_18_35:
     a_lot: 14
     a_little: 58
@@ -96,6 +108,9 @@ willingness_ai_assist:
 control_attitudes:
   question: "Which better describes how you feel about the amount of control you have over how AI is used in your life?"
   categories: [want_more_control, comfortable, not_sure]
+  pew_source:
+    us_adults: "topline p.4, item AICONTROL2, row 'Jun 9-15, 2025' (comfortable 17 / more control 61 / not sure 21)"
+    women_and_age_bands: "report p.41 Appendix chart '6 in 10 Americans say they would like more control over the use of AI in their lives' (women 60/15/24; 18-29 59/29/12; 30-49 60/20/20)"
   women_18_35:
     want_more_control: 58
     comfortable: 24

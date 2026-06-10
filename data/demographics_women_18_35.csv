@@ -1,5 +1,9 @@
 # Demographic marginal distributions for US women aged 18-35 — for Method B.
 #
+# PEW TABLE/PAGE FOR THESE NUMBERS: NONE. No number in this file comes from a
+# Pew W173 table or page — the AI reports do not publish demographic composition.
+# Every value below is an approximate US Census ACS (2023) marginal. See note.
+#
 # IMPORTANT SOURCE NOTE:
 # The three Pew W173 AI PDFs in data/ do NOT publish population composition
 # (race, education, income, region) for women 18-35 — they report AI ATTITUDES
