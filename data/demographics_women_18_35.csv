@@ -1,0 +1,50 @@
+# Demographic marginal distributions for US women aged 18-35 — for Method B.
+#
+# IMPORTANT SOURCE NOTE:
+# The three Pew W173 AI PDFs in data/ do NOT publish population composition
+# (race, education, income, region) for women 18-35 — they report AI ATTITUDES
+# broken out BY demographic group, not the demographic makeup of the group.
+# Pew's methodology weights the panel to 2023 US Census ACS benchmarks, so the
+# population marginals below are drawn from US Census ACS (the source the project
+# brief authorizes: "Use US Census or Pew published marginals"), NOT from the AI
+# reports. They are APPROXIMATE reference values for US women ~18-35, rounded to
+# whole percentages and intended for conditioning Method B profiles; refine
+# against specific ACS tables if exact joint marginals are required.
+#
+# APPROXIMATIONS / compromises (per the instruction to document them):
+#   - age_band: split 18-35 into 18-24 / 25-29 / 30-35, weighted by the number of
+#     single years in each band (7/5/6 of 18 yrs) ~ 39/28/33, assuming a roughly
+#     flat single-year age distribution across the cohort.
+#   - education: "women 18-35" blends 18-24 (many not yet finished schooling, so
+#     lower attainment) with 25-35 (women 25-34 are ~47% bachelor's+); the blended
+#     figure is lower than the 25-34-only rate. Highest-attained categories.
+#   - income: HOUSEHOLD income; young-adult households skew lower. Coarse brackets;
+#     the least precise variable here — treat as indicative.
+#   - region: US Census 4-region scheme.
+#   - urbanicity: omitted (not in the requested variable list; the brief mentions
+#     it for Method B and it can be added later).
+#
+# Marginals are INDEPENDENT per variable (each `variable` block sums to ~100).
+# Method B is responsible for combining them into a joint distribution.
+#
+# Read in pandas with: pd.read_csv(path, comment='#')
+variable,category,pct
+age_band,18-24,39
+age_band,25-29,28
+age_band,30-35,33
+race_ethnicity,White non-Hispanic,52
+race_ethnicity,Hispanic,22
+race_ethnicity,Black non-Hispanic,14
+race_ethnicity,Asian non-Hispanic,6
+race_ethnicity,Other or multiracial non-Hispanic,6
+education,Bachelor's degree or higher,39
+education,Some college or associate,33
+education,High school or less,28
+income,Under $30k,26
+income,$30k-$59.9k,28
+income,$60k-$99.9k,24
+income,$100k or more,22
+region,Northeast,17
+region,Midwest,21
+region,South,38
+region,West,24
