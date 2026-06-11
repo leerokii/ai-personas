@@ -77,8 +77,10 @@ def administer_question(
     letters: list[str],
     max_tokens: int = 16,
     max_attempts: int = 2,
+    system: str | None = None,
 ) -> dict:
-    """Send `prompt`, parse an option letter, retry once on parse failure.
+    """Send `prompt` (optionally with a `system` persona prompt), parse an option
+    letter, retry once on parse failure.
 
     Returns a dict with the final parsed answer, whether parsing succeeded, the
     number of attempts, and the raw text of each attempt.
@@ -86,7 +88,7 @@ def administer_question(
     attempts: list[dict] = []
     parsed: str | None = None
     for attempt in range(1, max_attempts + 1):
-        raw = client.complete(prompt, max_tokens=max_tokens)
+        raw = client.complete(prompt, system=system, max_tokens=max_tokens)
         parsed = parse_letter(raw, letters)
         attempts.append({"attempt": attempt, "raw": raw, "parsed": parsed})
         if parsed is not None:

@@ -46,9 +46,12 @@ def estimate_cost_usd(n_calls: int, pricing: dict) -> float:
     )
 
 
-# Persona builders by method. Methods B–D are added in later phases.
+# Persona builders by method, paired with the user-message template each uses.
+# Method A embeds its framing in the user prompt (method_a.txt). Methods B-D put
+# the persona in a system prompt and share the question-only user template.
 METHOD_BUILDERS = {
     "method_a": (personas.method_a, "method_a.txt"),
+    "method_b": (personas.method_b, "survey_question.txt"),
 }
 
 
@@ -110,7 +113,9 @@ def run_method(
     def worker(task):
         rep, p, q = task
         prompt, letters = rendered[q["id"]]
-        res = survey.administer_question(client, prompt, letters)
+        res = survey.administer_question(
+            client, prompt, letters, system=p.get("system")
+        )
         return {
             "method": p["method"],
             "persona_id": p["persona_id"],
