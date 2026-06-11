@@ -29,21 +29,41 @@ import survey  # noqa: E402
 
 RESULTS_RAW = ROOT.parent / "results" / "raw"
 
-# Per-call token assumptions for the pre-run estimate (from the smoke test:
-# ~109 input + 4 output tokens for a single-question Method A call; rounded up a
-# little to cover question-length variation across the five questions).
-EST_INPUT_TOKENS = 120
-EST_OUTPUT_TOKENS = 5
+# Per-call token assumptions for the pre-run estimate, calibrated from smoke
+# tests. Input tokens per SURVEY call vary by method because the persona system
+# prompt grows: none (A), a short demographic profile (B), a ~150-word narrative
+# (C, D). Output is a single letter (~5 tokens).
+SURVEY_INPUT_TOKENS = {
+    "method_a": 110,
+    "method_b": 185,
+    "method_c": 290,
+    "method_d": 290,
+}
+SURVEY_OUTPUT_TOKENS = 5
+
+# Methods C and D also make one narrative-GENERATION call per persona.
+GEN_METHODS = {"method_c", "method_d"}
+GEN_INPUT_TOKENS = 130
+GEN_OUTPUT_TOKENS = 300
 
 # Above this estimated cost, require explicit confirmation before running.
 CONFIRM_THRESHOLD_USD = 1.00
 
 
-def estimate_cost_usd(n_calls: int, pricing: dict) -> float:
-    return (
-        n_calls * EST_INPUT_TOKENS / 1_000_000 * pricing["input_per_mtok"]
-        + n_calls * EST_OUTPUT_TOKENS / 1_000_000 * pricing["output_per_mtok"]
+def estimate_cost_usd(method, n_personas, n_questions, n_repeats, pricing):
+    """Estimate total cost (survey + any narrative generation) and the call counts."""
+    n_survey = n_personas * n_questions * n_repeats
+    s_in = SURVEY_INPUT_TOKENS.get(method, 150)
+    cost = (
+        n_survey * s_in / 1_000_000 * pricing["input_per_mtok"]
+        + n_survey * SURVEY_OUTPUT_TOKENS / 1_000_000 * pricing["output_per_mtok"]
     )
+    n_gen = n_personas if method in GEN_METHODS else 0
+    cost += (
+        n_gen * GEN_INPUT_TOKENS / 1_000_000 * pricing["input_per_mtok"]
+        + n_gen * GEN_OUTPUT_TOKENS / 1_000_000 * pricing["output_per_mtok"]
+    )
+    return cost, n_survey, n_gen
 
 
 # Persona builders by method, paired with the user-message template each uses.
@@ -52,6 +72,7 @@ def estimate_cost_usd(n_calls: int, pricing: dict) -> float:
 METHOD_BUILDERS = {
     "method_a": (personas.method_a, "method_a.txt"),
     "method_b": (personas.method_b, "survey_question.txt"),
+    "method_c": (personas.method_c, "survey_question.txt"),
 }
 
 
@@ -98,18 +119,18 @@ def run_method(
     builder, template_name = METHOD_BUILDERS[method]
     template = survey.load_template(template_name)
     questions = survey.load_questions()[:n_questions]
-    panel = builder(n_personas)
-    tasks = build_tasks(panel, questions, n_repeats)
-    n_calls = len(tasks)
 
     pricing = {
         "input_per_mtok": client.tracker.input_per_mtok,
         "output_per_mtok": client.tracker.output_per_mtok,
     }
-    est = estimate_cost_usd(n_calls, pricing)
+    est, n_survey, n_gen = estimate_cost_usd(
+        method, n_personas, len(questions), n_repeats, pricing
+    )
+    gen_note = f" + {n_gen} generation" if n_gen else ""
     print(
-        f"[estimate] {method}: {n_calls} calls "
-        f"({n_personas} personas x {n_questions} questions x {n_repeats} repeats) "
+        f"[estimate] {method}: {n_survey} survey{gen_note} calls "
+        f"({n_personas} personas x {len(questions)} questions x {n_repeats} repeats) "
         f"~= ${est:.2f}  (cap ${client.tracker.budget_cap_usd:.2f})"
     )
     if confirm and est > CONFIRM_THRESHOLD_USD:
@@ -118,6 +139,14 @@ def run_method(
             "confirm-threshold; re-run with --yes to proceed."
         )
         return
+
+    # Build the panel AFTER the confirm gate — for C/D this is where narrative
+    # generation (API calls) happens, so it must not run before approval.
+    if n_gen:
+        print(f"[personas] generating {n_personas} narratives ...")
+    panel = builder(n_personas, client)
+    tasks = build_tasks(panel, questions, n_repeats)
+    n_calls = len(tasks)
 
     sidecar = write_personas_sidecar(method, panel)
     print(f"[personas] wrote {len(panel)} persona records to {sidecar}")
@@ -198,9 +227,13 @@ def main():
             "input_per_mtok": client.tracker.input_per_mtok,
             "output_per_mtok": client.tracker.output_per_mtok,
         }
-        n_calls = args.personas * args.questions * args.repeats
-        est = estimate_cost_usd(n_calls, pricing)
-        print(f"[estimate] {args.method}: {n_calls} calls ~= ${est:.2f}")
+        est, n_survey, n_gen = estimate_cost_usd(
+            args.method, args.personas, args.questions, args.repeats, pricing
+        )
+        gen_note = f" + {n_gen} generation" if n_gen else ""
+        print(
+            f"[estimate] {args.method}: {n_survey} survey{gen_note} calls ~= ${est:.2f}"
+        )
         return
 
     run_method(

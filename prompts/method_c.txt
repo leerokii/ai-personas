@@ -1,0 +1,8 @@
+Write a first-person backstory of approximately 150 words for a US adult woman with this demographic profile:
+- Age group: {age_band}
+- Race/ethnicity: {race_ethnicity}
+- Highest education: {education}
+- Household income: {income}
+- US region: {region}
+
+Cover, in her own voice: her values, her occupation, her daily life, her friendships, and her online habits. Make her a specific, believable individual — concrete details, not a demographic summary. Do not restate or name the profile labels above; let them shape the details naturally. Write only the backstory, beginning with "I", in about 150 words.
