@@ -55,16 +55,34 @@ METHOD_BUILDERS = {
 }
 
 
-def build_tasks(method: str, n_personas: int, questions: list[dict], n_repeats: int):
+def build_tasks(panel: list[dict], questions: list[dict], n_repeats: int):
     """Return a flat list of (rep, persona, question) tuples to administer."""
-    builder, _ = METHOD_BUILDERS[method]
-    panel = builder(n_personas)
     tasks = []
     for rep in range(n_repeats):
         for p in panel:
             for q in questions:
                 tasks.append((rep, p, q))
     return tasks
+
+
+def write_personas_sidecar(method: str, panel: list[dict]) -> Path:
+    """Persist persona metadata (profile / traits / narrative) alongside results.
+
+    The survey JSONL keys responses by persona_id only; this sidecar maps each
+    persona_id to its demographic profile (Method B), behavioural traits (D), and
+    narrative (C/D), so analyses can split responses by subgroup. The `system`
+    prompt text itself is omitted to keep the file readable.
+    """
+    path = RESULTS_RAW / f"{method}_personas.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        for p in panel:
+            rec = {"persona_id": p["persona_id"], "method": p["method"]}
+            for key in ("profile", "traits", "narrative"):
+                if key in p:
+                    rec[key] = p[key]
+            f.write(json.dumps(rec) + "\n")
+    return path
 
 
 def run_method(
@@ -77,10 +95,11 @@ def run_method(
     confirm: bool = True,
 ) -> None:
     client = Client()
-    _, template_name = METHOD_BUILDERS[method]
+    builder, template_name = METHOD_BUILDERS[method]
     template = survey.load_template(template_name)
     questions = survey.load_questions()[:n_questions]
-    tasks = build_tasks(method, n_personas, questions, n_repeats)
+    panel = builder(n_personas)
+    tasks = build_tasks(panel, questions, n_repeats)
     n_calls = len(tasks)
 
     pricing = {
@@ -99,6 +118,9 @@ def run_method(
             "confirm-threshold; re-run with --yes to proceed."
         )
         return
+
+    sidecar = write_personas_sidecar(method, panel)
+    print(f"[personas] wrote {len(panel)} persona records to {sidecar}")
 
     # Pre-render each question's prompt + valid letters once.
     rendered = {
