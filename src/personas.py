@@ -17,6 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -129,4 +130,117 @@ def method_c(
             "narrative": narr,
         }
         for i, (profile, narr) in enumerate(zip(profiles, narratives))
+    ]
+
+
+# Human-readable phrasing for each sampled behavioral trait, injected into the
+# Method D narrative-generation prompt so the backstory anchors to the fact.
+BEHAVIOR_PHRASES = {
+    "ai_awareness": {
+        "heard_a_lot": "She has heard or read a lot about AI.",
+        "heard_a_little": "She has heard or read a little about AI.",
+        "nothing_at_all": "She has heard nothing at all about AI.",
+    },
+    "ai_usage_frequency": {
+        "almost_constantly_or_several_a_day": "She interacts with AI almost constantly or several times a day.",
+        "about_once_a_day": "She interacts with AI about once a day.",
+        "several_times_a_week": "She interacts with AI several times a week.",
+        "less_often": "She interacts with AI less than several times a week — rarely.",
+    },
+    "ai_sentiment": {
+        "more_concerned": "She feels more concerned than excited about the increased use of AI in daily life.",
+        "more_excited": "She feels more excited than concerned about the increased use of AI in daily life.",
+        "equally": "She feels equally concerned and excited about the increased use of AI in daily life.",
+    },
+    "willingness_ai_assist": {
+        "a_lot": "She would let AI assist a lot with her day-to-day tasks.",
+        "a_little": "She would let AI assist a little with her day-to-day tasks.",
+        "not_at_all": "She would not let AI assist with her day-to-day tasks at all.",
+    },
+    "control_attitudes": {
+        "want_more_control": "She would like more control over how AI is used in her life.",
+        "comfortable": "She is comfortable with the amount of control she has over how AI is used in her life.",
+        "not_sure": "She is not sure how she feels about the control she has over how AI is used in her life.",
+    },
+}
+
+
+def load_behaviors(path: Path = DATA / "behaviors_women.yaml") -> dict[str, tuple]:
+    """Read the Pew behavioral distributions into {measure: (categories, weights)}.
+
+    Uses the directly measured `women` block for each measure.
+    """
+    with open(path) as f:
+        data = yaml.safe_load(f)
+    out: dict[str, tuple] = {}
+    for measure, block in data.items():
+        w = block["women"]
+        out[measure] = (list(w.keys()), [float(v) for v in w.values()])
+    return out
+
+
+def sample_behaviors(n: int, seed: int = DEFAULT_SEED) -> list[dict]:
+    """Sample n personas' behavioral traits from the Pew women distributions.
+
+    Each measure is sampled independently (published marginals, not behaviour x
+    demographic crosstabs — documented limitation). Uses a distinct RNG stream
+    from the demographic sampling so the two are reproducible and aligned by
+    index without interfering.
+    """
+    rng = random.Random(seed + 1)
+    behaviors = load_behaviors()
+    return [
+        {m: rng.choices(cats, weights=w, k=1)[0] for m, (cats, w) in behaviors.items()}
+        for _ in range(n)
+    ]
+
+
+def method_d(
+    n: int,
+    client,
+    seed: int = DEFAULT_SEED,
+    max_tokens: int = 300,
+    max_workers: int = 8,
+) -> list[dict]:
+    """Method D — behaviorally grounded personas.
+
+    Take the same seeded demographic profiles as Methods B and C, layer on
+    behavioral traits sampled from Pew's published women distributions, and
+    generate a narrative anchored to those empirical behavioral facts. The
+    narrative is the survey system prompt; the sampled traits are persisted so
+    the behavioral-consistency check can compare stated behavior to answers.
+    """
+    profiles = sample_profiles(n, seed)
+    behaviors = sample_behaviors(n, seed)
+    gen_template = (PROMPTS / "method_d.txt").read_text()
+    persona_template = (PROMPTS / "method_c_persona.txt").read_text()
+
+    def render_gen(profile: dict, traits: dict) -> str:
+        fields = dict(profile)
+        fields["b_awareness"] = BEHAVIOR_PHRASES["ai_awareness"][traits["ai_awareness"]]
+        fields["b_usage"] = BEHAVIOR_PHRASES["ai_usage_frequency"][traits["ai_usage_frequency"]]
+        fields["b_sentiment"] = BEHAVIOR_PHRASES["ai_sentiment"][traits["ai_sentiment"]]
+        fields["b_willingness"] = BEHAVIOR_PHRASES["willingness_ai_assist"][traits["willingness_ai_assist"]]
+        fields["b_control"] = BEHAVIOR_PHRASES["control_attitudes"][traits["control_attitudes"]]
+        return gen_template.format(**fields)
+
+    def generate(pt: tuple) -> str:
+        profile, traits = pt
+        return client.complete(render_gen(profile, traits), max_tokens=max_tokens).strip()
+
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        narratives = list(ex.map(generate, zip(profiles, behaviors)))
+
+    return [
+        {
+            "persona_id": i,
+            "method": "D",
+            "system": persona_template.format(narrative=narr),
+            "profile": profile,
+            "traits": traits,
+            "narrative": narr,
+        }
+        for i, (profile, traits, narr) in enumerate(
+            zip(profiles, behaviors, narratives)
+        )
     ]

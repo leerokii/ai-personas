@@ -1,0 +1,15 @@
+Write a first-person backstory of approximately 150 words for a US adult woman with this demographic profile:
+- Age group: {age_band}
+- Race/ethnicity: {race_ethnicity}
+- Highest education: {education}
+- Household income: {income}
+- US region: {region}
+
+The following are established empirical facts about her relationship with AI and technology:
+- {b_awareness}
+- {b_usage}
+- {b_sentiment}
+- {b_willingness}
+- {b_control}
+
+Cover, in her own voice: her values, occupation, daily life, friendships, and online habits. Anchor the backstory to the AI/technology facts above — they are true of her and must be reflected naturally in how she lives and talks about technology. Do not contradict them and do not invent a different relationship with AI. Make her a specific, believable individual — concrete details, not a summary. Do not restate or list the facts or the profile labels. Write only the backstory, beginning with "I", in about 150 words.

@@ -73,6 +73,7 @@ METHOD_BUILDERS = {
     "method_a": (personas.method_a, "method_a.txt"),
     "method_b": (personas.method_b, "survey_question.txt"),
     "method_c": (personas.method_c, "survey_question.txt"),
+    "method_d": (personas.method_d, "survey_question.txt"),
 }
 
 
