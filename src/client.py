@@ -13,6 +13,7 @@ model (and its rates) is a one-line config edit, not a code change.
 from __future__ import annotations
 
 import os
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -89,6 +90,7 @@ class Client:
             budget_cap_usd=self.config["budget_cap_usd"],
         )
         self._client = anthropic.Anthropic(api_key=api_key)
+        self._lock = threading.Lock()  # guards the cost tracker for concurrent runs
 
     def complete(
         self,
@@ -102,10 +104,11 @@ class Client:
         Records usage on the cost tracker. Raises BudgetExceeded if the running
         cost has already passed the cap (checked before the call).
         """
-        if self.tracker.cost_usd >= self.tracker.budget_cap_usd:
-            raise BudgetExceeded(
-                f"Budget cap hit before call: {self.tracker.summary()}"
-            )
+        with self._lock:
+            if self.tracker.cost_usd >= self.tracker.budget_cap_usd:
+                raise BudgetExceeded(
+                    f"Budget cap hit before call: {self.tracker.summary()}"
+                )
 
         kwargs: dict = {
             "model": self.model,
@@ -117,9 +120,10 @@ class Client:
             kwargs["system"] = system
 
         response = self._client.messages.create(**kwargs)
-        self.tracker.record(
-            response.usage.input_tokens, response.usage.output_tokens
-        )
+        with self._lock:
+            self.tracker.record(
+                response.usage.input_tokens, response.usage.output_tokens
+            )
 
         text = next(
             (b.text for b in response.content if b.type == "text"), ""
