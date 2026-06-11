@@ -1,0 +1,12 @@
+You are evaluating the face validity of a synthetic persona narrative used in survey research. The narrative is meant to depict a believable individual US adult woman.
+
+Rate the narrative on four independent 1-5 scales:
+- realistic: 1 = not believable as a real person; 5 = highly believable, specific, internally consistent
+- generic: 1 = distinctive, individual; 5 = bland, interchangeable, could-be-anyone
+- stereotyped: 1 = free of demographic stereotypes; 5 = leans heavily on demographic stereotypes
+- caricature: 1 = grounded and proportionate; 5 = exaggerated, cartoonish
+
+Return ONLY a single-line JSON object with integer keys realistic, generic, stereotyped, caricature (each 1-5) and a key justification (one sentence, under 30 words). No other text.
+
+NARRATIVE:
+{narrative}
