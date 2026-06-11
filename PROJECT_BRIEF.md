@@ -1,7 +1,7 @@
 # Project Brief: LLM Persona Construction Methods
 ### Testing four ways of building LLM personas of US women (all ages, 18+), on questions about AI for finding online communities.
 
-## What the Brief Asks For (Min's email, paraphrased)
+## What the Brief Asks For 
 - Build 100 LLM personas modelling one group of humans
 - Ask them a few single-select survey questions
 - Use the results to inform a consequential decision
